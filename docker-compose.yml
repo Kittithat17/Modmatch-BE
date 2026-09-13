@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: modmatch-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: modmatch
+    ports:
+      - "5436:5432" # host:container — change the host port if it clashes on your machine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # .sql files here run automatically only when the volume is first created
+      - ./db/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d modmatch"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: modmatch-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Inside the docker network, reach postgres by service name and internal port.
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: modmatch
+      SERVER_PORT: "8080"
+      JWT_SECRET: dev-secret-change-me
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:

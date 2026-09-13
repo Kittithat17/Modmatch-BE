@@ -1,0 +1,15 @@
+# secrets
+.env
+
+# build output
+/server
+/app
+*.exe
+
+# logs
+*.log
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

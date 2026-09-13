@@ -1,0 +1,14 @@
+version: "2"
+sql:
+  # Add one entry per domain. Example for a "user" domain:
+  #
+  # - engine: "postgresql"
+  #   schema: "db/migrations"
+  #   queries: "db/queries/users.sql"
+  #   gen:
+  #     go:
+  #       package: "sqlcgen"
+  #       out: "internal/user/sqlcgen"
+  #       sql_package: "pgx/v5"
+  #       emit_json_tags: true
+  #       emit_pointers_for_null_types: true
